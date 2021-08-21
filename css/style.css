@@ -8,7 +8,14 @@ body{
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
 }
-
+.message{
+	padding: 5px 5px;
+	border-radius: 15px;
+	color: #fff;
+	font-family: sans-serif;
+	background-color:rgb(202, 85, 85);
+	
+}
 .wave{
 	position: fixed;
 	bottom: 0;
