@@ -370,68 +370,68 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Username</th>
-                                            <th>User No.</th>
-                                            <th>Change Status</th>
+                                        <th>#</th>
+                                            <th>Clerance Name</th>
+                                            <th>Clerance Owner</th>
+                                            <th>In_charge</th>
+                                            <th>Date Created.</th>
+                                            <th>Super Admin Approval Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                            <td>100090</td>
-                                            <td><button class="btn btn-primary"><i class="fa fa-edit "></i> View Detail</button> <button class="btn btn-warning"><i class="fa fa-pencil"></i> Completed</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                            <td>100090</td>
-                                            <td><button class="btn btn-primary"><i class="fa fa-edit "></i> View Detail</button> <button class="btn btn-warning"><i class="fa fa-pencil"></i> Completed</button></td>
+                                     <?php
+                                        $office = $_SESSION['office_id'];
+                                        // echo $office;
+                                         $sql = "SELECT * FROM `clearance_list` where office = $office and `approved` = 1 ";
+                                         $result = mysqli_query($conn,$sql);
+                                        
+                                         if($result -> num_rows >0)
+                                         { 
+                                             $count =0;
+                                            // print_r($result);
+                                          while($row = mysqli_fetch_assoc($result)){
+                                                $owner = $row['clearance_owner'];
+                                               
+                                                
+                                                $count += 1;
+                                                $sql2 = "SELECT * FROM `users` where id = $owner ";
+                                                $result2 = mysqli_query($conn,$sql2);
+                                                
+                                                $data = mysqli_fetch_assoc($result2); 
 
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                            <td>100090</td>
-                                            <td><button class="btn btn-primary"><i class="fa fa-edit "></i> View Detail</button> <button class="btn btn-warning"><i class="fa fa-pencil"></i> Completed</button></td>
+                                         
+                                     
+                                     
+                                     ?> 
 
-                                        </tr>
                                         <tr>
-                                            <td>1</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                            <td>100090</td>
-                                            <td><button class="btn btn-primary"><i class="fa fa-edit "></i> View Detail</button> <button class="btn btn-warning"><i class="fa fa-pencil"></i> Completed</button></td>
-
+                                             <td><?php echo $count; ?></td>
+                                            <td><?php echo $row['name'] ?></td>
+                                            <td><?php echo $data['full_name'] ?></td>
+                                            <td><?php echo $_SESSION['office'].' office' ?></td>
+                                            <td><?php echo $row['date_created'] ?></td>
+                                            <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
+                                            <td><button class="btn btn-primary"><i class="fa fa-edit "></i> View Detail</button> <button class="btn
+                                             <?php 
+                                             if ($row ['completed']== 0){
+                                                echo "btn-warning";
+                                            }
+                                            else{
+                                                echo "btn-primary";
+                                            }
+                                            ?>"><i class="fa fa-pencil"></i>  <?php 
+                                            if ($row ['completed']== 0){
+                                               echo "Pending";
+                                           }
+                                           else{
+                                               echo "Completed";
+                                           }
+                                           
+                                           
+                                           
+                                           ?></button></td>
                                         </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                            <td>100090</td>
-                                            <td><button class="btn btn-primary"><i class="fa fa-edit "></i> View Detail</button> <button class="btn btn-warning"><i class="fa fa-pencil"></i> Completed</button></td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                            <td>100090</td>
-                                            <td><button class="btn btn-primary"><i class="fa fa-edit "></i> View Detail</button> <button class="btn btn-warning"><i class="fa fa-pencil"></i> Completed</button></td>
-
-                                        </tr>
+                                       <?php }} ?>
 
                                     </tbody>
                                 </table>
