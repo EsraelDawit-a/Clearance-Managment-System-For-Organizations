@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 21, 2021 at 05:56 PM
--- Server version: 10.4.20-MariaDB
--- PHP Version: 8.0.9
+-- Generation Time: Aug 22, 2021 at 10:55 PM
+-- Server version: 10.4.8-MariaDB
+-- PHP Version: 7.1.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -40,6 +41,13 @@ CREATE TABLE `clearance_list` (
   `date_created` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `clearance_list`
+--
+
+INSERT INTO `clearance_list` (`id`, `name`, `description`, `clearance_owner`, `in_charge`, `office`, `material`, `completed`, `approved`, `date_created`) VALUES
+(1, 'rwrqwqwr', 'tetwetwet', 2, 3, 1, 1, 0, 1, '2021-08-22 20:54:00');
+
 -- --------------------------------------------------------
 
 --
@@ -60,6 +68,20 @@ CREATE TABLE `clerance_request` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `feedbacks`
+--
+
+CREATE TABLE `feedbacks` (
+  `id` int(11) NOT NULL,
+  `to_office` int(11) NOT NULL,
+  `from_user` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `material`
 --
 
@@ -70,6 +92,13 @@ CREATE TABLE `material` (
   `available_quantity` int(11) NOT NULL,
   `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `material`
+--
+
+INSERT INTO `material` (`id`, `name`, `in_charge`, `available_quantity`, `description`) VALUES
+(1, 'book', 1, 25, 'ffsdfsdfgdg');
 
 -- --------------------------------------------------------
 
@@ -88,7 +117,8 @@ CREATE TABLE `office` (
 --
 
 INSERT INTO `office` (`id`, `name`, `description`) VALUES
-(1, 'ioioioyu', 'jkjjkj90909');
+(1, 'ioioioyu', 'jkjjkj90909'),
+(2, 'gdsdg', 'dasdad');
 
 -- --------------------------------------------------------
 
@@ -111,6 +141,21 @@ INSERT INTO `role` (`id`, `user_type`, `work_place`) VALUES
 (2, 'Admin', 1),
 (3, 'superAdmin', 1),
 (4, 'other', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `todos`
+--
+
+CREATE TABLE `todos` (
+  `id` int(11) NOT NULL,
+  `office` int(11) NOT NULL,
+  `incharge` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `completed` tinyint(1) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -179,6 +224,14 @@ ALTER TABLE `clerance_request`
   ADD KEY `office_requested` (`office_requested`);
 
 --
+-- Indexes for table `feedbacks`
+--
+ALTER TABLE `feedbacks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `to_office` (`to_office`),
+  ADD KEY `from_user` (`from_user`);
+
+--
 -- Indexes for table `material`
 --
 ALTER TABLE `material`
@@ -197,6 +250,13 @@ ALTER TABLE `office`
 ALTER TABLE `role`
   ADD PRIMARY KEY (`id`),
   ADD KEY `work_place` (`work_place`);
+
+--
+-- Indexes for table `todos`
+--
+ALTER TABLE `todos`
+  ADD KEY `office` (`office`),
+  ADD KEY `id` (`id`);
 
 --
 -- Indexes for table `users`
@@ -220,7 +280,7 @@ ALTER TABLE `work_place`
 -- AUTO_INCREMENT for table `clearance_list`
 --
 ALTER TABLE `clearance_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `clerance_request`
@@ -229,16 +289,22 @@ ALTER TABLE `clerance_request`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `feedbacks`
+--
+ALTER TABLE `feedbacks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `material`
 --
 ALTER TABLE `material`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `office`
 --
 ALTER TABLE `office`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `role`
@@ -279,6 +345,13 @@ ALTER TABLE `clerance_request`
   ADD CONSTRAINT `office_requested` FOREIGN KEY (`office_requested`) REFERENCES `office` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `feedbacks`
+--
+ALTER TABLE `feedbacks`
+  ADD CONSTRAINT `feedbacks_ibfk_1` FOREIGN KEY (`to_office`) REFERENCES `office` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `feedbacks_ibfk_2` FOREIGN KEY (`from_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `material`
 --
 ALTER TABLE `material`
@@ -289,6 +362,13 @@ ALTER TABLE `material`
 --
 ALTER TABLE `role`
   ADD CONSTRAINT `work_place` FOREIGN KEY (`work_place`) REFERENCES `work_place` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `todos`
+--
+ALTER TABLE `todos`
+  ADD CONSTRAINT `todos_ibfk_1` FOREIGN KEY (`office`) REFERENCES `office` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `todos_ibfk_2` FOREIGN KEY (`id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `users`
