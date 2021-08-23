@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 22, 2021 at 10:55 PM
+-- Generation Time: Aug 23, 2021 at 02:23 PM
 -- Server version: 10.4.8-MariaDB
 -- PHP Version: 7.1.33
 
@@ -46,7 +46,9 @@ CREATE TABLE `clearance_list` (
 --
 
 INSERT INTO `clearance_list` (`id`, `name`, `description`, `clearance_owner`, `in_charge`, `office`, `material`, `completed`, `approved`, `date_created`) VALUES
-(1, 'rwrqwqwr', 'tetwetwet', 2, 3, 1, 1, 0, 1, '2021-08-22 20:54:00');
+(2, 'Shark', 'saffasf', 4, 5, 3, 2, 1, 1, '2021-08-22 21:49:42'),
+(3, 'table', 'dasfsf', 4, 3, 1, 3, 0, 1, '2021-08-23 06:43:25'),
+(4, 'boom', 'fdsdfsdf', 5, 4, 3, 3, 0, 1, '2021-08-23 10:47:21');
 
 -- --------------------------------------------------------
 
@@ -56,14 +58,19 @@ INSERT INTO `clearance_list` (`id`, `name`, `description`, `clearance_owner`, `i
 
 CREATE TABLE `clerance_request` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
   `clearance_owner` int(11) NOT NULL,
   `office_requested` int(11) NOT NULL,
-  `completed` tinyint(1) NOT NULL,
-  `approved` tinyint(1) NOT NULL,
-  `date_requested` timestamp NOT NULL DEFAULT current_timestamp()
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `sent` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `clerance_request`
+--
+
+INSERT INTO `clerance_request` (`id`, `clearance_owner`, `office_requested`, `date`, `sent`) VALUES
+(2, 4, 3, '2021-08-23 08:09:53', 0),
+(3, 4, 1, '2021-08-23 08:12:49', 0);
 
 -- --------------------------------------------------------
 
@@ -79,6 +86,15 @@ CREATE TABLE `feedbacks` (
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `feedbacks`
+--
+
+INSERT INTO `feedbacks` (`id`, `to_office`, `from_user`, `content`, `date`) VALUES
+(1, 3, 3, 'ioiopiop', '2021-08-23 08:23:55'),
+(2, 1, 4, 'hello there', '2021-08-23 08:26:37'),
+(3, 3, 3, 'adadadad', '2021-08-23 11:43:01');
+
 -- --------------------------------------------------------
 
 --
@@ -90,15 +106,43 @@ CREATE TABLE `material` (
   `name` varchar(255) NOT NULL,
   `in_charge` int(11) NOT NULL,
   `available_quantity` int(11) NOT NULL,
-  `description` text NOT NULL
+  `description` text NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `material`
 --
 
-INSERT INTO `material` (`id`, `name`, `in_charge`, `available_quantity`, `description`) VALUES
-(1, 'book', 1, 25, 'ffsdfsdfgdg');
+INSERT INTO `material` (`id`, `name`, `in_charge`, `available_quantity`, `description`, `date`) VALUES
+(2, 'Shark', 3, 7, 'AI memehir', '2021-08-23 05:29:02'),
+(3, 'laptop', 1, 10, 'dadafaf', '2021-08-23 06:08:02'),
+(4, 'bag', 1, 46, 'pc bags', '2021-08-23 06:41:57');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message`
+--
+
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL,
+  `to_user` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `content` text NOT NULL,
+  `sender` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `message`
+--
+
+INSERT INTO `message` (`id`, `to_user`, `date`, `content`, `sender`) VALUES
+(1, 4, '2021-08-23 08:41:52', 'sfafsfaf', 3),
+(2, 4, '2021-08-23 09:30:13', 'fsafasf', 1),
+(3, 3, '2021-08-23 09:32:52', 'yyyttttttt', 1),
+(7, 4, '2021-08-23 10:38:17', 'ante seweye ', 1),
+(8, 4, '2021-08-23 10:38:58', 'hey', 3);
 
 -- --------------------------------------------------------
 
@@ -118,7 +162,7 @@ CREATE TABLE `office` (
 
 INSERT INTO `office` (`id`, `name`, `description`) VALUES
 (1, 'ioioioyu', 'jkjjkj90909'),
-(2, 'gdsdg', 'dasdad');
+(3, 'HoD', 'HoD');
 
 -- --------------------------------------------------------
 
@@ -149,13 +193,21 @@ INSERT INTO `role` (`id`, `user_type`, `work_place`) VALUES
 --
 
 CREATE TABLE `todos` (
-  `id` int(11) NOT NULL,
   `office` int(11) NOT NULL,
   `incharge` int(11) NOT NULL,
   `content` text NOT NULL,
   `completed` tinyint(1) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp()
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `todos`
+--
+
+INSERT INTO `todos` (`office`, `incharge`, `content`, `completed`, `date`, `id`) VALUES
+(1, 3, 'fsafas', 0, '2021-08-22 21:15:14', 4),
+(3, 5, 'createMaterialList tommorow', 0, '2021-08-22 21:45:23', 5);
 
 -- --------------------------------------------------------
 
@@ -179,7 +231,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `full_name`, `role`, `phone`, `password`, `office`, `user_type`) VALUES
 (2, 'klklk', 2, '8908908', 'ioipo', 1, 'student'),
-(3, 'esrael', 2, '121212', 'esrael', 1, 'sasa');
+(3, 'esrael', 2, '121212', 'esrael', 1, 'sasa'),
+(4, 'yona', 3, '0982131343', 'yona', 1, 'normal'),
+(5, 'Kaleb', 2, '1234567', '123456789', 3, 'Mono');
 
 -- --------------------------------------------------------
 
@@ -239,6 +293,14 @@ ALTER TABLE `material`
   ADD KEY `in_charge` (`in_charge`);
 
 --
+-- Indexes for table `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sender` (`sender`),
+  ADD KEY `to_user` (`to_user`);
+
+--
 -- Indexes for table `office`
 --
 ALTER TABLE `office`
@@ -255,8 +317,9 @@ ALTER TABLE `role`
 -- Indexes for table `todos`
 --
 ALTER TABLE `todos`
+  ADD PRIMARY KEY (`id`),
   ADD KEY `office` (`office`),
-  ADD KEY `id` (`id`);
+  ADD KEY `incharge` (`incharge`);
 
 --
 -- Indexes for table `users`
@@ -280,31 +343,37 @@ ALTER TABLE `work_place`
 -- AUTO_INCREMENT for table `clearance_list`
 --
 ALTER TABLE `clearance_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `clerance_request`
 --
 ALTER TABLE `clerance_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `feedbacks`
 --
 ALTER TABLE `feedbacks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `material`
 --
 ALTER TABLE `material`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `message`
+--
+ALTER TABLE `message`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `office`
 --
 ALTER TABLE `office`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `role`
@@ -313,10 +382,16 @@ ALTER TABLE `role`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `todos`
+--
+ALTER TABLE `todos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `work_place`
@@ -358,6 +433,13 @@ ALTER TABLE `material`
   ADD CONSTRAINT `in_charge` FOREIGN KEY (`in_charge`) REFERENCES `office` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `message`
+--
+ALTER TABLE `message`
+  ADD CONSTRAINT `message_ibfk_1` FOREIGN KEY (`sender`) REFERENCES `office` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `message_ibfk_2` FOREIGN KEY (`to_user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `role`
 --
 ALTER TABLE `role`
@@ -368,7 +450,7 @@ ALTER TABLE `role`
 --
 ALTER TABLE `todos`
   ADD CONSTRAINT `todos_ibfk_1` FOREIGN KEY (`office`) REFERENCES `office` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `todos_ibfk_2` FOREIGN KEY (`id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `todos_ibfk_2` FOREIGN KEY (`incharge`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `users`
