@@ -75,12 +75,16 @@ if (!isset($_SESSION['id'])) {
             header("Location:./index.php?error=Unabel To Add Task Sorry!");
         }
     }
-    
+
     // Revoke Todo
     if (isset($_POST['todo'])) {
         $state = $_POST['state'];
         $id = $_POST['id'];
-        if($state == 0){$state =1;}else{$state = 0;}
+        if ($state == 0) {
+            $state = 1;
+        } else {
+            $state = 0;
+        }
         $sql = "UPDATE `todos` SET `completed` = $state WHERE `todos`.`id` = $id";
         $result = mysqli_query($conn, $sql);
         if ($result) {
@@ -101,6 +105,22 @@ if (!isset($_SESSION['id'])) {
         }
     }
 
+   
+
+    // Send Message
+    if(isset($_POST['sendM'])){
+        $reciver = $_POST['reciver'];
+        $sender = $_SESSION['office_id'];
+        $contetn = $_POST['cont'];
+        $sql = "INSERT INTO `message` (`to_user`, `content`, 
+        `sender`) VALUES ($reciver, '$content',$sender)";
+        if(mysqli_query($conn,$sql)){
+            header("Location:./index.php?error=Message Successfully Sent");
+
+        }else {
+            header("Location:./index.php?error=Unabel To Send Message Sorry!");
+        }
+    }
 ?>
 
     <!DOCTYPE html>
@@ -156,7 +176,8 @@ if (!isset($_SESSION['id'])) {
                 <div style="color: white;
 padding: 15px 50px 5px 50px;
 float: right;
-font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office'] . '   '  ?> </a> <a href="./logout.php" class="btn btn-danger square-btn-adjust">Logout</a> </div>
+font-size: 16px;"> 
+<a style="margin-right: 25px;"><?php echo $_SESSION['office'] . '   '  ?> </a> <a href="./logout.php" class="btn btn-danger square-btn-adjust">Logout</a> </div>
             </nav>
             <!-- /. NAV TOP  -->
             <nav class="navbar-default navbar-side" role="navigation">
@@ -174,7 +195,7 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                             <a href="./addClerance.php"><i class="fa fa-desktop fa-3x"></i>Add Clearances</a>
                         </li>
                         <li>
-                            <a href="./index.php"><i class="fa fa-qrcode fa-3x"></i>Overview</a>
+                            <a href="./sendFeedback.php"><i class="fa fa-qrcode fa-3x"></i>sendFeedback</a>
                         </li>
                         <li>
                             <a href="./index.php"><i class="fa fa-bar-chart-o fa-3x"></i> View Clearance Details</a>
@@ -182,14 +203,11 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                         <li>
                             <a href="./index.php"><i class="fa fa-table fa-3x"></i>Update Clearances</a>
                         </li>
-                        <li>
-                            <a href="form.html"><i class="fa fa-edit fa-3x"></i> Submit Clearance Request </a>
-                        </li>
 
 
 
                         <li>
-                            <a href="blank.html"><i class="fa fa-square-o fa-3x"></i> Blank Page</a>
+                            <a href="./materials.php"><i class="fa fa-square-o fa-3x"></i> Available Materials</a>
                         </li>
                     </ul>
 
@@ -200,11 +218,25 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
             <div id="page-wrapper">
                 <div id="page-inner">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-7">
                             <h2>Admin <?php echo $_SESSION['office'] . '   '  ?> Dashboard</h2>
                             <h5>Welcome <?php echo $_SESSION['userName'] ?> , Love to see you back. </h5>
                         </div>
+                        <div class="col-sm-1" style="margin-top: 15px;">
+                        <button type="button" class="btn btn-info btn-circle">
+                       <h1 style="color:#fff; font-size:20px; margin:0;font-weight:700;" > <?php 
+                        $m_id = $_SESSION['id'];
+                        $sql = "SELECT * FROM message where to_user = $m_id";
+                        $result = mysqli_query($conn,$sql);
+                        echo $result ->num_rows;
+                        ?></h1>
+                    
+                    </button>
+                        </div>
+                        <div class="col-md-1">
+                        <h2>Messages</h2>
 
+                        </div>
 
                     </div>
 
@@ -308,13 +340,25 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
 
                                                             ?> Clearances are Available </p>
                                     <p class="text-muted">Add Clearances and View Details Here</p>
-                                    <a href="./addClerance.php" class="btn btn-primary"><i class="fa fa-edit "></i> Add Clerances</a> <button class="btn btn-warning"><i class="fa fa-pencil"></i> View Clerance List</button></td>
+                                    <a href="./addClerance.php" class="btn btn-primary"><i class="fa fa-edit "></i> Add Clerances</a>
+                                    <?php
+                                    if ($_SESSION['role'] == 3) {
+                                        echo "<a href='./clearanceList.php' class='btn btn-warning'><i class='fa fa-pencil'></i> View Clerance List</a>  ";
+                                    }
+
+                                    ?>
+                                    <a href="./materials.php" class="btn btn-success"><i class="fa fa-edit "></i> View Materials</a>
+
+
+
+                                    </td>
 
                                     <hr />
                                     <p class="text-muted">
-                                        <span class="text-muted color-bottom-txt"><i class="fa fa-edit"></i>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit gthn.
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit gthn.
+
+                                           
+
+
                                         </span>
                                     </p>
                                 </div>
@@ -324,7 +368,7 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
 
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <div class="panel back-dash">
-                                <i class="fa fa-dashboard fa-3x"></i><strong> &nbsp; TODOS</strong>
+                                <i class="fa fa-dashboard fa-3x"></i><strong> &nbsp; Todo List</strong>
 
                                 <?php
                                 $office = $_SESSION['office_id'];
@@ -361,25 +405,25 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                                                 <p class="text-muted"><?php echo "Date:" . $row['date'] ?> </p>
 
                                             </div>
-                                               
+
                                             <form action="" method="POST">
-                                            <input class="form-control" name="id" type="hidden" value="<?php echo $row['id']?>" />
-                                            <input class="form-control" name="state" type="hidden" value="<?php echo $row['completed']?>" />
+                                                <input class="form-control" name="id" type="hidden" value="<?php echo $row['id'] ?>" />
+                                                <input class="form-control" name="state" type="hidden" value="<?php echo $row['completed'] ?>" />
 
 
-                                            <div class="col-sm-3" style="padding-top: 8px;">
-                                                <?php
+                                                <div class="col-sm-3" style="padding-top: 8px;">
+                                                    <?php
 
-                                                if ($row['completed'] == 0) {
-                                                    echo "<button type='submit' name='todo' class='btn btn-warning btn-sm' >complete</button>";
-                                                } else {
-                                                    echo "<button type='submit' name='todo' class='btn btn-info btn-sm' >Renew todo</button>";
-                                                }
+                                                    if ($row['completed'] == 0) {
+                                                        echo "<button type='submit' name='todo' class='btn btn-warning btn-sm' >complete</button>";
+                                                    } else {
+                                                        echo "<button type='submit' name='todo' class='btn btn-info btn-sm' >Renew todo</button>";
+                                                    }
 
-                                                ?>
-                                            </div>
-                                            
-                                            <button style ="margin-left:15px;" type='submit' name='delete_todo' class='btn btn-success btn-sm' >delete</button>
+                                                    ?>
+                                                </div>
+
+                                                <button style="margin-left:15px;" type='submit' name='delete_todo' class='btn btn-success btn-sm'>delete</button>
                                             </form>
                                         </div>
                                 <?php }
@@ -396,9 +440,21 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                                 <div class="main-temp-back">
                                     <div class="panel-body">
                                         <div class="row">
-                                            <div class="col-xs-6"> <i class="fa fa-cloud fa-3x"></i> Add Task </div>
+                                            <div class="col-xs-6"> <i class="fa fa-cloud fa-3x"></i> Add todo </div>
                                             <div class="col-xs-6">
-                                                <div class="text-temp"> 10° </div>
+                                                <div class="text-temp">
+
+                                                    <?php
+                                                    $office = $_SESSION['office_id'];
+                                                    $user_id =  $_SESSION['id'];
+                                                    // echo $office;
+                                                    $sql = "SELECT * FROM `todos` where office = $office and `incharge` = $user_id ";
+                                                    $result = mysqli_query($conn, $sql);
+                                                    $remaning = $result->num_rows;
+                                                    echo $remaning . " " . "Tasks";
+
+                                                    ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -423,13 +479,78 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                                             <input class="form-control" name="content" type="text" placeholder="task content" />
 
                                         </div>
-                                        <button name="add_todo" type="submit" class="btn btn-primary">Add Todo</button>
+                                        <button name="add_todo" type="submit" class="btn btn-primary">Add Task</button>
                                     </form>
                                     <!-- Add Task -->
                                 </div>
                             </div>
 
                         </div>
+                        <!-- Send Message -->
+
+                        <div class="col-md-6 col-sm-12 col-xs-12 ">
+                            <div class="panel ">
+                                <div class="main-temp-back">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-xs-6"> <i class="fa fa-cloud fa-3x"></i> Send Message </div>
+                                            <div class="col-xs-6">
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="panel panel-back noti-box">
+                                <span class="icon-box bg-color-red set-icon">
+                                    <i class="fa fa-envelope-o"></i>
+                                </span>
+                                <div class="text-box">
+                                    <!-- Send -->
+                                    <form action="" method="POST">
+
+                                    <div class="form-group">
+                                        <label>Select Reciver</label>
+                                        <select class="form-control" name="reciver">
+
+                                            <?php
+
+                                            $current = $_SESSION['id'];
+                                            $sql = "SELECT * FROM `users` where id!=$current";
+                                            $result = mysqli_query($conn, $sql);
+                                            if ($result->num_rows > 0) {
+
+                                                print_r($result);
+                                                while ($row = mysqli_fetch_assoc($result)) {
+
+
+
+                                            ?>
+                                                    <option value="<?php echo $row['id'] ?>"><?php echo $row['full_name'] ?></option>
+                                                <?php }
+                                            } else { ?>
+                                                <div class="form-group">
+
+                                                    <input class="form-control" disabeld placeholder="No Materials Are Availabel Please Add One" />
+                                                </div><?php } ?>
+
+                                        </select>
+                                    </div>
+                                        <div class="form-group">
+
+                                               <textarea name="cont" id="" cols="63" rows="5"></textarea>
+                                        </div>
+                                        <button name="sendM" type="submit" class="btn btn-primary">Send Message</button>
+                                    </form>
+                                    <!-- Send -->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <!-- Send Message -->
 
                     </div>
                     <!-- /. ROW  -->
@@ -703,14 +824,12 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
             <div class="row">
                 <div class="col-md-6 col-sm-12 col-xs-12">
 
-                    <div class="chat-panel panel panel-default chat-boder chat-panel-head">
+                    <div class="chat-panel panel panel-default chat-boder chat-panel-head" style="margin:20px auto; ">
                         <div class="panel-heading">
                             <i class="fa fa-comments fa-fw"></i>
                             Some Feedbacks From users For You
                             <div class="btn-group pull-right">
-                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-chevron-down"></i>
-                                </button>
+                                
                                 <ul class="dropdown-menu slidedown">
                                     <li>
                                         <a href="#">
@@ -783,16 +902,7 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                             </ul>
                         </div>
 
-                        <div class="panel-footer">
-                            <div class="input-group">
-                                <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message to send..." />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-warning btn-sm" id="btn-chat">
-                                        Send
-                                    </button>
-                                </span>
-                            </div>
-                        </div>
+                        
 
                     </div>
 
@@ -801,30 +911,29 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                     <di class="row">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                Clerance Requests
+                                   My Clerances 
                                 <div class="panel-body">
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Clearance Name</th>
-                                                    <th>Owner</th>
-                                                    <th>Office Requested</th>
-                                                    <th>Date Requested</th>
-                                                    <th>Change Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Clerance Name</th>
+                                                <th>Clerance Owner</th>
+                                                <th>In_charge</th>
+                                                <th>Date Created.</th>
+                                                <th>Super Admin Approval Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <form action="" method="POST">
 
                                                 <?php
-                                                $office = $_SESSION['office_id'];
+                                                $id = $_SESSION['id'];
                                                 // echo $office;
-                                                $sql = "SELECT * FROM `clerance_request` where office_requested = $office";
+                                                $sql = "SELECT * FROM `clearance_list` where clearance_owner = $id";
                                                 $result = mysqli_query($conn, $sql);
-                                                $remaning = $result->num_rows;
 
-                                                // print_r($result);
                                                 if ($result->num_rows > 0) {
                                                     $count = 0;
                                                     // print_r($result);
@@ -839,33 +948,33 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                                                         $data = mysqli_fetch_assoc($result2);
 
 
+
+
                                                 ?>
 
                                                         <tr>
-                                                            <td><?php echo $count ?></td>
+                                                            <td><?php echo $count; ?></td>
                                                             <td><?php echo $row['name'] ?></td>
                                                             <td><?php echo $data['full_name'] ?></td>
-                                                            <td><?php echo $_SESSION['office'] ?></td>
-                                                            <td><?php echo $row['date_requested'] ?></td>
-                                                            <td><button type="submit" name="update" class="btn btn-info btn-sm"><i class=" fa fa-refresh "></i> Update</button>
-                                                                <?php
+                                                            <td><?php echo $_SESSION['office'] . ' office' ?></td>
+                                                            <td><?php echo $row['date_created'] ?></td>
+                                                            <td><?php
+                                                            
+                                                                  if($row['completed'] ==0 || $row['approved'] == 0){ 
+                                                                      echo "<button class='btn btn-success btn-sm disabled'><i class='fa fa-edit'></i> Incomplete </button>";
+                                                                    }
+                                                         ?>
+                                                            
+                                                        </td>
 
-                                                                if ($row['on_going'] == 0) {
-                                                                    echo "<button style='margin:5px auto;' class='btn btn-success btn-sm'><i class='fa fa-link '></i> ON Going</button>";
-                                                                } else {
-                                                                    echo "<button class='btn btn-danger btn-sm'><i class='fa fa-edit '></i> Add to Queue</button>";
-                                                                }
-
-                                                                ?>
-
-
-                                                            </td>
+                                                            
                                                         </tr>
                                                 <?php }
                                                 } ?>
 
-                                            </tbody>
-                                        </table>
+                                            </form>
+                                        </tbody>
+                                    </table>
 
 
                                     </div>
@@ -874,20 +983,59 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                             </div>
                         </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-3 col-sm-12 col-xs-12" style="margin:auto 10vw;">
-                        <div class="panel panel-primary text-center no-boder bg-color-green">
-                            <div class="panel-body">
-                                <i class="fa fa-comments-o fa-5x"></i>
-                                <h4>200 New Comments </h4>
-                                <h4>See All Comments </h4>
-                            </div>
-                            <div class="panel-footer back-footer-green">
-                                <i class="fa fa-rocket fa-5x"></i>
-                                Lorem ipsum dolor sit amet sit sit, consectetur adipiscing elitsit sit gthn ipsum dolor sit amet ipsum dolor sit amet
-
-                            </div>
+                <div class="row" style="background-color: burlywood;">
+                    <div class="col-md-6 col-sm-12 col-xs-12" style="margin:20px auto; background-color:burlywood;max-height:300px;overflow:hidden;padding:20px auto;">
+                    <div class="chat-panel panel panel-default chat-boder chat-panel-head" style="max-height: 300px;">
+                        <div class="panel-heading">
+                            <i class="fa fa-comments fa-fw"></i>
+                            Messages
+                           
                         </div>
+
+                        <div class="panel-body">
+                            <ul class="chat-box">
+
+                                <?php
+                                $my_of = $_SESSION['id'];
+                                $sql = "SELECT * FROM `message` where to_user = $my_of ";
+                                $result = mysqli_query($conn, $sql);
+                                if ($result->num_rows) {
+
+                                    while ($row = mysqli_fetch_assoc($result)) {
+
+                                ?>
+
+                                        <li class="left clearfix">
+                                            <span class="chat-img pull-left">
+                                                <img src="../img/3.png" alt="User" class="img-circle" />
+                                            </span>
+                                            <div class="chat-body clearfix">
+
+                                                <strong><?php
+                                                        $of = $row['sender'];
+                                                        $sql = "SELECT * FROM `office` where id = $of";
+                                                        $result = mysqli_query($conn, $sql);
+                                                        $fn = mysqli_fetch_assoc($result);
+
+
+                                                        echo  $fn['name'] ?></strong>
+                                                <small class="pull-right text-muted">
+                                                    <i class="fa fa-clock-o fa-fw"></i><?php echo $row['date'] ?></small>
+
+                                                <p>
+                                                    <?php echo  $row['content'] ?>
+                                                </p>
+                                            </div>
+                                        </li>
+                                <?php  }
+                                } ?>
+
+                            </ul>
+                        </div>
+
+                       
+
+                    </div>
                     </div>
                 </div>
             </div>

@@ -18,16 +18,16 @@ if (!isset($_SESSION['id'])) {
         $desc = $_POST['desc'];
         // print_r($desc);
         if (empty($in_charge) || empty($name) || empty($office) || empty($material) || empty($owener) || empty($desc)) {
-            header("Location:./addClerance.php?error=Please Fill Empty Fields First Please!");
+            header("Location:./addClerance.php?message=Please Fill Empty Fields First Please!");
         } else {
             $sql = "INSERT INTO `clearance_list` ( `name`, `description`,
         `clearance_owner`, `in_charge`, `office`, `material`) 
        VALUES ('$name', '$desc', $owener, $in_charge, $office, $material)";
             $result = mysqli_query($conn, $sql);
             if ($result) {
-                header("Location:./addClerance.php?success=New Clearance Successfully Added!");
+                header("Location:./addClerance.php?message=New Clearance Successfully Added!");
             } else {
-                header("Location:./addClerance.php?error=Unable To Create New Clearance!");
+                header("Location:./addClerance.php?message=Unable To Create New Clearance!");
             }
         }
     }
@@ -43,7 +43,7 @@ if (!isset($_SESSION['id'])) {
         $desc = $_POST['desc'];
         // print_r($desc);
         if (empty($name) || empty($office)  || empty($desc) || empty($quantity)) {
-            header("Location:./addClerance.php?error=Please Fill Empty Fields First Please!");
+            header("Location:./addClerance.php?message=Please Fill Empty Fields First Please!");
         } else {
             print_r($in_charge);
             $sql = "INSERT INTO `material` ( `name`, 
@@ -51,9 +51,9 @@ if (!isset($_SESSION['id'])) {
             VALUES ('$name',$office,$quantity, '$desc')";
             $result = mysqli_query($conn, $sql);
             if ($result) {
-                header("Location:./addClerance.php?success=New Material Successfully Added!");
+                header("Location:./addClerance.php?message=New Material Successfully Added!");
             } else {
-                header("Location:./addClerance.php?error=Unable To Create New Material!");
+                header("Location:./addClerance.php?message=Unable To Create New Material!");
                 // print_r(mysqli_error($conn));
             }
         }
@@ -74,7 +74,7 @@ if (!isset($_SESSION['id'])) {
         
 
        if($password1 !=$password2){
-        header("Location:./addClerance.php?error=The two Password Fields DontMatch  Please Try Again!");
+        header("Location:./addClerance.php?message=The two Password Fields DontMatch  Please Try Again!");
 
        }else{
         $sql = "INSERT INTO `users` (`full_name`, `role`, 
@@ -83,9 +83,9 @@ if (!isset($_SESSION['id'])) {
 
         $result = mysqli_query($conn,$sql);
         if ($result) {
-            header("Location:./addClerance.php?success=New User Successfully Added!");
+            header("Location:./addClerance.php?message=New User Successfully Added!");
         } else {
-            header("Location:./addClerance.php?error=Unable To Create New User!");
+            header("Location:./addClerance.php?message=Unable To Create New User!");
             // print_r(mysqli_error($conn));
         }
        }
@@ -102,16 +102,16 @@ if (!isset($_SESSION['id'])) {
         $desc = $_POST['desc'];
         // print_r($desc);
         if (empty($building) || empty($office)  || empty($desc)) {
-            header("Location:./addClerance.php?error=Please Fill Empty Fields First Please!");
+            header("Location:./addClerance.php?message=Please Fill Empty Fields First Please!");
         } else {
             print_r($in_charge);
             $sql = "INSERT INTO `work_place` (`block_no`, `office_no`, `work_desc`) 
             VALUES ($building, $office, '$desc')";
             $result = mysqli_query($conn, $sql);
             if ($result) {
-                header("Location:./addClerance.php?success=New WorkPlace Successfully Added!");
+                header("Location:./addClerance.php?message=New WorkPlace Successfully Added!");
             } else {
-                header("Location:./addClerance.php?error=Unable To Create New WorkPlace!");
+                header("Location:./addClerance.php?message=Unable To Create New WorkPlace!");
                 // print_r(mysqli_error($conn));
             }
         }
@@ -125,15 +125,15 @@ if (!isset($_SESSION['id'])) {
         
         // print_r($desc);
         if (empty($building) || empty($role_name)) {
-            header("Location:./addClerance.php?error=Please Fill Empty Fields First Please!");
+            header("Location:./addClerance.php?message=Please Fill Empty Fields First Please!");
         } else {
             print_r($in_charge);
             $sql = "INSERT INTO `role` (`user_type`, `work_place`) VALUES ('$role_name',$building) ";
             $result = mysqli_query($conn, $sql);
             if ($result) {
-                header("Location:./addClerance.php?success=New Role Successfully Added!");
+                header("Location:./addClerance.php?message=New Role Successfully Added!");
             } else {
-                header("Location:./addClerance.php?error=Unable To Create New Role!");
+                header("Location:./addClerance.php?message=Unable To Create New Role!");
                 // print_r(mysqli_error($conn));
             }
         }
@@ -147,15 +147,15 @@ if (!isset($_SESSION['id'])) {
         
         // print_r($desc);
         if (empty($desc) || empty($name)) {
-            header("Location:./addClerance.php?error=Please Fill Empty Fields First Please!");
+            header("Location:./addClerance.php?message=Please Fill Empty Fields First Please!");
         } else {
             print_r($in_charge);
             $sql = "INSERT INTO `office` (`name`, `description`) VALUES ('$name', '$desc'); ";
             $result = mysqli_query($conn, $sql);
             if ($result) {
-                header("Location:./addClerance.php?success=New Office Successfully Added!");
+                header("Location:./addClerance.php?message=New Office Successfully Added!");
             } else {
-                header("Location:./addClerance.php?error=Unable To Create New Office!");
+                header("Location:./addClerance.php?message=Unable To Create New Office!");
                 // print_r(mysqli_error($conn));
             }
         }
@@ -267,6 +267,14 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
 
 
                     </div>
+                    <?php if (isset($_GET['message'])) { ?>
+                        <div class="message">
+                            <h5>
+                                <p class="error"><?php echo $_GET['message']; ?></p>
+                            </h5>
+                            
+                        </div>
+                    <?php } ?>
                     <!-- dont -->
 
 
