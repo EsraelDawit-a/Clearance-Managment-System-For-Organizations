@@ -6,7 +6,9 @@ session_start();
 
 if (!isset($_SESSION['id'])) {
     header("Location:../login.php?error=Login Here First!");
-} else {
+} 
+
+if($_SESSION['role'] ==2 || $_SESSION['role']==3){
 
     if (isset($_POST['add_clearance'])) {
         print_r("add_clearance");
@@ -77,6 +79,7 @@ if (!isset($_SESSION['id'])) {
         header("Location:./addClerance.php?message=The two Password Fields DontMatch  Please Try Again!");
 
        }else{
+        $password1 = password_hash($password1,PASSWORD_DEFAULT);
         $sql = "INSERT INTO `users` (`full_name`, `role`, 
         `phone`, `password`, `office`, `user_type`) 
         VALUES ('$name', $role, '$phone', '$password1', $office, '$user_type')";
@@ -164,12 +167,12 @@ if (!isset($_SESSION['id'])) {
 ?>
 
     <!DOCTYPE html>
-    <html xmlns="http://www.w3.org/1999/xhtml">
+    <html >
 
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Free Bootstrap Admin Template : Binary Admin</title>
+        <title>Clearance Managment System Dashboard</title>
         <!-- BOOTSTRAP STYLES-->
         <link href="../css/bootstrap.css" rel="stylesheet" />
         <!-- FONTAWESOME STYLES-->
@@ -221,7 +224,7 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
             <!-- /. NAV TOP  -->
             <nav class="navbar-default navbar-side" role="navigation">
                 <div class="sidebar-collapse">
-                    <ul class="nav" id="main-menu">
+                <ul class="nav" id="main-menu">
                         <li class="text-center">
                             <img src="../img/find_user.png" class="user-image img-responsive" />
                         </li>
@@ -230,11 +233,11 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                         <li>
                             <a class="active-menu" href="./index.php"><i class="fa fa-dashboard fa-3x"></i>Home</a>
                         </li>
+                        <!-- Admins Only -->
+                        <?php if($_SESSION['role'] ==3 || $_SESSION['role'] == 2) {?>
+
                         <li>
                             <a href="./addClerance.php"><i class="fa fa-desktop fa-3x"></i>Add Clearances</a>
-                        </li>
-                        <li>
-                            <a href="./index.php"><i class="fa fa-qrcode fa-3x"></i>Overview</a>
                         </li>
                         <li>
                             <a href="./index.php"><i class="fa fa-bar-chart-o fa-3x"></i> View Clearance Details</a>
@@ -242,15 +245,20 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                         <li>
                             <a href="./index.php"><i class="fa fa-table fa-3x"></i>Update Clearances</a>
                         </li>
-                        <li>
-                            <a href="form.html"><i class="fa fa-edit fa-3x"></i> Submit Clearance Request </a>
-                        </li>
-
-
                         
                         <li>
-                            <a href="blank.html"><i class="fa fa-square-o fa-3x"></i> Blank Page</a>
+                            <a href="./materials.php"><i class="fa fa-square-o fa-3x"></i> Available Materials</a>
+                        </li><?php }?>
+                        <!-- Admins Only -->
+
+                        <li>
+                            <a href="./sendFeedback.php"><i class="fa fa-qrcode fa-3x"></i>sendFeedback</a>
                         </li>
+                       
+                      
+
+
+
                     </ul>
 
                 </div>
@@ -642,4 +650,9 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
     </body>
 
     </html>
-<?php } ?>
+<?php } 
+
+else{
+    header("Location:../login.php?error=Trying to Access Unaoutorized Page!");
+}
+?>

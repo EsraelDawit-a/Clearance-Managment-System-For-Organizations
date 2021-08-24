@@ -11,12 +11,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
    $username = validate($_POST['username']);
    $password = validate($_POST['password']);
 
-   $sql = "SELECT * FROM `users` WHERE `full_name` = '$username' and `password` = '$password'";
+   $sql = "SELECT * FROM `users` WHERE `full_name` = '$username'";
    $result = mysqli_query($conn,$sql);
-   print_r($result->num_rows);
+//    print_r($result->num_rows);
    if($result->num_rows >0){
     //  echo "User Found";
     $row = mysqli_fetch_assoc($result);
+    $hash_p = $row['password'];
+    if(password_verify($password,$hash_p)){
     $_SESSION['userName'] = $row['full_name'];
     $_SESSION['id'] = $row['id'];
     $_SESSION['role'] = $row['role'];
@@ -43,9 +45,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     // echo $role['user_type'];
     // print_r($off);
     header("Location:./pages/index.php");
+    }
       
     }else{
-        echo "unabel to find role";
+        header("Location:./login.php?error=Incorrect User Or Password!");   
     }
     
 

@@ -6,14 +6,16 @@ session_start();
 
 if (!isset($_SESSION['id'])) {
     header("Location:../login.php?error=Login Here First!");
-} else {
+} 
+
+if($_SESSION['role']==3){
 
 
     $detail_1 = false;
     if (isset($_POST['view_detail_1'])) {
         $detail_1 = true;
         // print_r("view_detail_1");
-        $item_v1 = $_POST['id'];
+        $item_v1 = $_POST['idn'];
         $app = $_POST['app'];
         $it_name = $_POST['name'];
         $ful_n = $_POST['full_name'];
@@ -22,36 +24,38 @@ if (!isset($_SESSION['id'])) {
         $created = $_POST['dt'];
         // print_r($it_name);
     }
-    
+
     // Revoke Completion 
     if (isset($_POST['done'])) {
-        $state = $_POST['state'];
+        $state = $_POST['completed'];
         $idn = $_POST['idn'];
-        print_r($idn);
-        // print_r($state);
-        // if($state == 0){$state =1;}else{$state = 0;}
-        // $sql = "UPDATE `clearance_list ` SET `completed` = $state WHERE  id = $id";
-        // $result = mysqli_query($conn, $sql);
-        // if ($result) {
-        //     header("Location:./clearanceList.php?error=Clearance Successfully Completed");
-        // } else {
-        //     header("Location:./clearanceList.php?error=Unabel To Complete Clearance Sorry!");
-           
-        // }
+        // print_r($idn);
+        print_r($state);
+        if($state == 0){$state =1;}else{$state = 0;}
+        print_r($state);
+
+        $sql = "UPDATE `clearance_list` SET completed = $state WHERE id = $idn ";
+        $result = mysqli_query($conn, $sql);
+        if ($result) {
+            header("Location:./clearanceList.php?error=Clearance Successfully Completed");
+        } else {
+            header("Location:./clearanceList.php?error=Unabel To Complete Clearance Sorry!");
+
+        }
     }
 
 
-   
+
 
 ?>
 
     <!DOCTYPE html>
-    <html xmlns="http://www.w3.org/1999/xhtml">
+    <html >
 
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Free Bootstrap Admin Template : Binary Admin</title>
+        <title>Clearance Managment System Dashboard</title>
         <!-- BOOTSTRAP STYLES-->
         <link href="../css/bootstrap.css" rel="stylesheet" />
         <!-- FONTAWESOME STYLES-->
@@ -103,7 +107,7 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
             <!-- /. NAV TOP  -->
             <nav class="navbar-default navbar-side" role="navigation">
                 <div class="sidebar-collapse">
-                    <ul class="nav" id="main-menu">
+                <ul class="nav" id="main-menu">
                         <li class="text-center">
                             <img src="../img/find_user.png" class="user-image img-responsive" />
                         </li>
@@ -112,11 +116,11 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                         <li>
                             <a class="active-menu" href="./index.php"><i class="fa fa-dashboard fa-3x"></i>Home</a>
                         </li>
+                        <!-- Admins Only -->
+                        <?php if($_SESSION['role'] ==3 || $_SESSION['role'] == 2) {?>
+
                         <li>
                             <a href="./addClerance.php"><i class="fa fa-desktop fa-3x"></i>Add Clearances</a>
-                        </li>
-                        <li>
-                            <a href="./index.php"><i class="fa fa-qrcode fa-3x"></i>Overview</a>
                         </li>
                         <li>
                             <a href="./index.php"><i class="fa fa-bar-chart-o fa-3x"></i> View Clearance Details</a>
@@ -124,15 +128,20 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                         <li>
                             <a href="./index.php"><i class="fa fa-table fa-3x"></i>Update Clearances</a>
                         </li>
+                        
                         <li>
-                            <a href="form.html"><i class="fa fa-edit fa-3x"></i> Submit Clearance Request </a>
-                        </li>
-
-
+                            <a href="./materials.php"><i class="fa fa-square-o fa-3x"></i> Available Materials</a>
+                        </li><?php }?>
+                        <!-- Admins Only -->
 
                         <li>
-                            <a href="blank.html"><i class="fa fa-square-o fa-3x"></i> Blank Page</a>
+                            <a href="./sendFeedback.php"><i class="fa fa-qrcode fa-3x"></i>sendFeedback</a>
                         </li>
+                       
+                      
+
+
+
                     </ul>
 
                 </div>
@@ -147,21 +156,21 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                             <h5>Welcome <?php echo $_SESSION['userName'] ?> , Love to see you back. </h5>
                         </div>
 
-                        
+
                     </div>
                     <?php if (isset($_GET['message'])) { ?>
                         <div class="message">
                             <h5>
                                 <p class="error"><?php echo $_GET['message']; ?></p>
                             </h5>
-                            
+
                         </div>
                     <?php } ?>
                     <!-- here -->
 
                     <div class="row">
                         <div class="col-md-12">
-                        <div class="panel-heading">
+                            <div class="panel-heading">
                                 Remaining Clerances Waiting Your Confirmation
                                 <div class="panel-body">
                                     <div class="table-responsive">
@@ -177,63 +186,68 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <form action="" method="POST">
 
-                                                    <?php
-                                                    $office = $_SESSION['office_id'];
-                                                    // echo $office;
-                                                    $sql = "SELECT * FROM `clearance_list` where approved = 1";
-                                                    $result = mysqli_query($conn, $sql);
-                                                    $remaning = $result->num_rows;
+                                                <?php
+                                                $office = $_SESSION['office_id'];
+                                                // echo $office;
+                                                $sql = "SELECT * FROM `clearance_list` where approved = 1";
+                                                $result = mysqli_query($conn, $sql);
+                                                $remaning = $result->num_rows;
 
-                                                    //  print_r($result);
-                                                    if ($result->num_rows > 0) {
-                                                        $count = 0;
-                                                        // print_r($result);
-                                                        while ($row = mysqli_fetch_assoc($result)) {
-                                                            $owner = $row['clearance_owner'];
-
-
-                                                            $count += 1;
-                                                            $sql2 = "SELECT * FROM `users` where id = $owner ";
-                                                            $result2 = mysqli_query($conn, $sql2);
-
-                                                            $data = mysqli_fetch_assoc($result2);
+                                                //  print_r($result);
+                                                if ($result->num_rows > 0) {
+                                                    $count = 0;
+                                                    // print_r($result);
+                                                    while ($row = mysqli_fetch_assoc($result)) {
+                                                        $owner = $row['clearance_owner'];
 
 
-                                                    ?>
-                                                            <tr>
+                                                        $count += 1;
+                                                        $sql2 = "SELECT * FROM `users` where id = $owner ";
+                                                        $result2 = mysqli_query($conn, $sql2);
+
+                                                        $data = mysqli_fetch_assoc($result2);
+
+
+                                                ?>
+                                                        <tr>
+                                                            <form action="" method="POST">
+
                                                                 <td><?php echo $count; ?></td>
                                                                 <td><?php echo $row['name'] ?></td>
                                                                 <td><?php echo $data['full_name'] ?></td>
                                                                 <td><?php echo $_SESSION['office'] . ' office' ?></td>
                                                                 <td><?php echo $row['date_created'] ?></td>
-                                                                <input type="text" name="idn" value="<?php echo $row['id'] ?>">
+                                                                <input type="hidden" name="idn" value="<?php echo $row['id'] ?>">
                                                                 <input type="hidden" name="name" value="<?php echo $row['name'] ?>">
                                                                 <input type="hidden" name="full_name" value="<?php echo $data['full_name'] ?>">
-                                                                <input type="hidden" name="state" value="<?php echo $row['completed'] ?>">
+                                                                <input type="hidden" name="completed" value="<?php echo $row['completed'] ?>">
                                                                 <input type="hidden" name="app" value="<?php echo $row['approved'] ?>">
                                                                 <input type="hidden" name="desc" value="<?php echo $row['description'] ?>">
                                                                 <input type="hidden" name="dt" value="<?php echo $row['date_created'] ?>">
-                                                                <td><button name="view_detail_1" type="submit" class="btn btn-primary"><i class="fa fa-edit "></i> View Detail</button> 
-                                                                
-                                                               <?php 
-                                                               
-                                                                if($row['completed'] == 0){?>
-                                                                  
-                                                                     <button name="done" type="submit" class='btn btn-warning'><i class='fa fa-pencil'></i>Complete</button>
-                                                               
-                                                            <?php  }
-                                                               
-                                                               ?>
-                                                            
-                                                            
-                                                            </td>
-                                                            </tr>
-                                                    <?php }
-                                                    } ?>
+                                                                <td><button name="view_detail_1" type="submit" class="btn btn-primary"><i class="fa fa-edit "></i> View Detail</button>
 
-                                                </form>
+                                                                    <?php
+
+                                                                    if ($row['completed'] == 0) { 
+
+                                                                        echo "<button name='done' type='submit' class='btn btn-warning'><i class='fa fa-pencil'></i>Complete</button>";
+
+                                                                    }else{
+                                                                        echo "<button name='done' type='submit' class='btn btn-success'><i class='fa fa-pencil'></i>Completed</button>";
+
+                                                                    }
+                                                                    
+                                                                    
+                                                                    ?>
+                                                            </form>
+
+
+                                                            </td>
+                                                        </tr>
+                                                <?php }
+                                                } ?>
+
                                             </tbody>
                                         </table>
 
@@ -280,7 +294,7 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                                                             ?>.</p>
                                                     </div>
                                                     <div class="tab-pane fade" id="messages-pills">
-                                                        <h4>Clerance Creation Date</h4>
+                                                        <h4>Clearance Creation Date</h4>
                                                         <p><?php echo $created ?>.</p>
                                                     </div>
                                                     <div class="tab-pane fade active in" id="settings-pills">
@@ -326,13 +340,13 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
                                     </div>
                                 </div>
                             <?php } ?>
+                            </div>
+
+
                         </div>
-
-
                     </div>
                 </div>
             </div>
-        </div>
 
         </div>
         <!-- /. ROW  -->
@@ -364,4 +378,8 @@ font-size: 16px;"> <a style="margin-right: 25px;"><?php echo $_SESSION['office']
     </body>
 
     </html>
-<?php } ?>
+<?php } 
+else{
+    header("Location:../login.php?error=Trying to Access Unaoutorized Page!");
+}
+?>
