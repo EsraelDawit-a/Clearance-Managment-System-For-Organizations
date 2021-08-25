@@ -105,7 +105,7 @@
     // Send Message
     if (isset($_POST['sendM'])) {
         $reciver = $_POST['reciver'];
-        $sender = $_SESSION['office_id'];
+        $sender = $_SESSION['id'];
         $content = $_POST['cont'];
         $sql = "INSERT INTO `message` (`to_user`, `content`, 
         `sender`) VALUES ($reciver, '$content',$sender)";

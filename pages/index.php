@@ -935,12 +935,12 @@ font-size: 16px;">
 
                                                     <strong><?php
                                                             $of = $rm['sender'];
-                                                            $sql = "SELECT * FROM `office` where id = $of";
+                                                            $sql = "SELECT * FROM `users` where id = $of";
                                                             $result = mysqli_query($conn, $sql);
                                                             $fn = mysqli_fetch_assoc($result);
 
-
-                                                            echo  $fn['name'] ?></strong>
+                                                            
+                                                            echo  $fn['full_name'] ?></strong>
                                                     <small class="pull-right text-muted">
                                                         <i class="fa fa-clock-o fa-fw"></i><?php echo $rm['date'] ?></small>
 
