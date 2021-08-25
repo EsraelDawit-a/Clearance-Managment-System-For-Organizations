@@ -1,6 +1,6 @@
 <?php
 
-include "./db.inc.php";
+include "../db.inc.php";
 session_start();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -44,18 +44,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     
     // echo $role['user_type'];
     // print_r($off);
-    header("Location:./pages/index.php");
+    header("Location:../pages/index.php");
     }
       
     }else{
-        header("Location:./login.php?error=Incorrect User Or Password!");   
+        header("Location:../login.php?error=Incorrect User Or Password!");   
     }
     
 
 
    }
    else{
-    header("Location:./login.php?error=Inncorrect User Or Password!");   
+    header("Location:../login.php?error=Inncorrect User Or Password!");   
     echo "No User Found";
 
    }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 23, 2021 at 02:23 PM
+-- Generation Time: Aug 24, 2021 at 11:01 PM
 -- Server version: 10.4.8-MariaDB
 -- PHP Version: 7.1.33
 
@@ -46,9 +46,7 @@ CREATE TABLE `clearance_list` (
 --
 
 INSERT INTO `clearance_list` (`id`, `name`, `description`, `clearance_owner`, `in_charge`, `office`, `material`, `completed`, `approved`, `date_created`) VALUES
-(2, 'Shark', 'saffasf', 4, 5, 3, 2, 1, 1, '2021-08-22 21:49:42'),
-(3, 'table', 'dasfsf', 4, 3, 1, 3, 0, 1, '2021-08-23 06:43:25'),
-(4, 'boom', 'fdsdfsdf', 5, 4, 3, 3, 0, 1, '2021-08-23 10:47:21');
+(6, 'yona', 'booook', 9, 10, 1, 6, 1, 1, '2021-08-24 20:23:24');
 
 -- --------------------------------------------------------
 
@@ -63,14 +61,6 @@ CREATE TABLE `clerance_request` (
   `date` timestamp NOT NULL DEFAULT current_timestamp(),
   `sent` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `clerance_request`
---
-
-INSERT INTO `clerance_request` (`id`, `clearance_owner`, `office_requested`, `date`, `sent`) VALUES
-(2, 4, 3, '2021-08-23 08:09:53', 0),
-(3, 4, 1, '2021-08-23 08:12:49', 0);
 
 -- --------------------------------------------------------
 
@@ -91,9 +81,8 @@ CREATE TABLE `feedbacks` (
 --
 
 INSERT INTO `feedbacks` (`id`, `to_office`, `from_user`, `content`, `date`) VALUES
-(1, 3, 3, 'ioiopiop', '2021-08-23 08:23:55'),
-(2, 1, 4, 'hello there', '2021-08-23 08:26:37'),
-(3, 3, 3, 'adadadad', '2021-08-23 11:43:01');
+(5, 3, 10, 'how to make it simple', '2021-08-24 20:25:40'),
+(6, 3, 11, 'dsasdda', '2021-08-24 20:35:24');
 
 -- --------------------------------------------------------
 
@@ -117,7 +106,9 @@ CREATE TABLE `material` (
 INSERT INTO `material` (`id`, `name`, `in_charge`, `available_quantity`, `description`, `date`) VALUES
 (2, 'Shark', 3, 7, 'AI memehir', '2021-08-23 05:29:02'),
 (3, 'laptop', 1, 10, 'dadafaf', '2021-08-23 06:08:02'),
-(4, 'bag', 1, 46, 'pc bags', '2021-08-23 06:41:57');
+(4, 'bag', 1, 46, 'pc bags', '2021-08-23 06:41:57'),
+(5, 'id list', 1, 45, 'studentsid', '2021-08-24 08:16:56'),
+(6, 'book', 1, 23, 'bookkkkkk', '2021-08-24 20:22:40');
 
 -- --------------------------------------------------------
 
@@ -138,11 +129,7 @@ CREATE TABLE `message` (
 --
 
 INSERT INTO `message` (`id`, `to_user`, `date`, `content`, `sender`) VALUES
-(1, 4, '2021-08-23 08:41:52', 'sfafsfaf', 3),
-(2, 4, '2021-08-23 09:30:13', 'fsafasf', 1),
-(3, 3, '2021-08-23 09:32:52', 'yyyttttttt', 1),
-(7, 4, '2021-08-23 10:38:17', 'ante seweye ', 1),
-(8, 4, '2021-08-23 10:38:58', 'hey', 3);
+(10, 9, '2021-08-24 20:25:04', 'hey there', 1);
 
 -- --------------------------------------------------------
 
@@ -161,7 +148,7 @@ CREATE TABLE `office` (
 --
 
 INSERT INTO `office` (`id`, `name`, `description`) VALUES
-(1, 'ioioioyu', 'jkjjkj90909'),
+(1, 'Registrar', 'jkjjkj90909'),
 (3, 'HoD', 'HoD');
 
 -- --------------------------------------------------------
@@ -201,14 +188,6 @@ CREATE TABLE `todos` (
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `todos`
---
-
-INSERT INTO `todos` (`office`, `incharge`, `content`, `completed`, `date`, `id`) VALUES
-(1, 3, 'fsafas', 0, '2021-08-22 21:15:14', 4),
-(3, 5, 'createMaterialList tommorow', 0, '2021-08-22 21:45:23', 5);
-
 -- --------------------------------------------------------
 
 --
@@ -230,10 +209,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `full_name`, `role`, `phone`, `password`, `office`, `user_type`) VALUES
-(2, 'klklk', 2, '8908908', 'ioipo', 1, 'student'),
-(3, 'esrael', 2, '121212', 'esrael', 1, 'sasa'),
-(4, 'yona', 3, '0982131343', 'yona', 1, 'normal'),
-(5, 'Kaleb', 2, '1234567', '123456789', 3, 'Mono');
+(8, 'biruk', 3, '0921313', '$2y$10$WiSaLvd9gvmwFYsq.7yxTufIyjNnUjiMSprX1afbMuHi9qISWKQO.', 1, 'student'),
+(9, 'yona', 2, '09831313', '$2y$10$mTNfFjr.0vYTUWgAdOqTCusr2WIjLBJ.1jM/7tDUJRjlQiBx5lwZq', 3, 'student'),
+(10, 'esrael', 2, '0983131363', '$2y$10$tQtCVoos9x7GAjbrRAZcK.g3EGMYHP1F/A9plwqtyv8v3TnCnLUtK', 1, 'worker'),
+(11, 'abebe', 1, '42424', '$2y$10$i8aBnRkp0C.VelU/z8I1euRKP1G8wJclyjQB.Z32/0wWzppGpjSCe', 1, 'Mono');
 
 -- --------------------------------------------------------
 
@@ -343,7 +322,7 @@ ALTER TABLE `work_place`
 -- AUTO_INCREMENT for table `clearance_list`
 --
 ALTER TABLE `clearance_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `clerance_request`
@@ -355,19 +334,19 @@ ALTER TABLE `clerance_request`
 -- AUTO_INCREMENT for table `feedbacks`
 --
 ALTER TABLE `feedbacks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `material`
 --
 ALTER TABLE `material`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `office`
@@ -385,13 +364,13 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `todos`
 --
 ALTER TABLE `todos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `work_place`

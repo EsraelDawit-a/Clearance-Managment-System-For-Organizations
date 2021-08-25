@@ -1,7 +1,5 @@
 <?php
 session_start();
-
-
 ?>
 
 <!DOCTYPE html>
@@ -25,8 +23,10 @@ session_start();
 		</div>
 		<div class="login-content">
 
-			<form action="./userLogin.php" method="POST">
+		
+			<form action="./controller/userLoginController.php" method="POST">
 				<img src="img/avatar.svg">
+
 				<?php if (isset($_GET['error'])) { ?>
 					<div class="message">
 						<h5>
@@ -34,6 +34,7 @@ session_start();
 				</h5>
 					</div>
 				<?php } ?>
+
 
 				<h2 class="title">Welcome</h2>
 
